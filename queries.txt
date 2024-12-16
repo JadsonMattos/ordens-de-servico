@@ -1,0 +1,42 @@
+1. Selecionar todos os clientes e seus veículos:
+
+SELECT c.Nome AS Cliente, v.Placa, v.Modelo, v.Ano
+FROM Cliente c
+JOIN Veiculo v ON c.idCliente = v.Cliente_idCliente;
+
+2. Listar todas as ordens de serviços com dados de clientes, veículos e equipe:
+
+SELECT 
+    os.idOS AS Ordem_Servico, 
+    c.Nome AS Cliente, 
+    v.Modelo AS Veiculo, 
+    e.Nome_da_Equipe AS Equipe,
+    os.Data_de_Emissao, 
+    os.Status, 
+    os.Valor
+FROM OS os
+JOIN Veiculo v ON os.Veiculo_idVeiculo = v.idVeiculo
+JOIN Cliente c ON v.Cliente_idCliente = c.idCliente
+JOIN Equipe e ON os.Equipe_idEquipe = e.idEquipe;
+
+3. Listar peças utilizar em uma ordem de serviço:
+
+SELECT 
+    os.idOS AS Ordem_Servico,
+    p.Descricao AS Peca, 
+    os_p.quantidade, 
+    p.Valor
+FROM OS_has_Peca os_p
+JOIN Peca p ON os_p.Peca_idPeca = p.idPeca
+JOIN OS os ON os_p.OS_idOS = os.idOS
+WHERE os.idOS = 1; -- Substitua 1 pelo idOS desejado
+
+4. Contar o número de serviços realizados pela equipe:
+
+SELECT 
+    e.Nome_da_Equipe AS Equipe,
+    COUNT(os_s.Servico_idServico) AS Total_Servicos
+FROM Equipe e
+JOIN OS os ON e.idEquipe = os.Equipe_idEquipe
+JOIN OS_has_Servico os_s ON os.idOS = os_s.OS_idOS
+GROUP BY e.Nome_da_Equipe;
